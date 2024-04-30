@@ -1,3 +1,15 @@
+# Trabajo Práctico - Aprendizaje supervisado
+## Clasificación de expresiones genómicas
+
+### Árbol de indecisión
+### Integrantes:
+- Freire, Guido LU: 978/21
+- Motta, Facundo LU: 889/21
+- Rodriguez, Ignacio LU: 956/21
+- Wisznia, Juan LU: 520/16
+
+---
+
 # Ejercicio 1
 ## Separación de datos
 
@@ -59,9 +71,9 @@ Comparemos la certeza de ciertos algoritmos de clasificacion mediante la metrica
 * LDA (Linear discriminant analysis)
 * Naïve Bayes
 
-Además compararemos "intra" algoritmos, es decir, compararemos mismos algoritmos con distintos hiperparametros y asi poder analizar como afectan el rendimiento de cada algoritmo. En este sentido, utilizaremos un ´´´RandomizedSearchCV´´´ que nos permite buscar de forma aleatoria en la grilla o "hipercubo" que generan los distintos intervalos/regiones para cada hiperparametro de cada modelo.
+Además compararemos "intra" algoritmos, es decir, compararemos mismos algoritmos con distintos hiperparametros y asi poder analizar como afectan el rendimiento de cada algoritmo. En este sentido, utilizaremos un ```RandomizedSearchCV``` que nos permite buscar de forma aleatoria en la grilla o "hipercubo" que generan los distintos intervalos/regiones para cada hiperparametro de cada modelo.
 
-Comenzaremos delimitando cuales hiperparametros utilizar para cada modelo y sus respectivos intervalos y/o valores que pueden tomar los mismos.
+Comenzaremos delimitando cuales hiperparametros utilizar para cada modelo y sus respectivos intervalos (*Tabla 3.1*) y/o valores que pueden tomar los mismos. Los dominios de cada hiperparámetro los elegimos "a ojo", leyendo la documentación de cada modelo y pensando valores razonables.
 
 | Modelo        | Hiperparámetro    | Intervalo / Valores posibles      | Descripción           |
 | -----         | -----             | -----                             | -----                 |
@@ -76,6 +88,32 @@ Comenzaremos delimitando cuales hiperparametros utilizar para cada modelo y sus 
 | LDA           | solver            | ['lsqr', 'eigen']                 | Metodo utilizado para resolver el problema|
 | LDA           | shrinkage         | [None, 'auto', 0.1, 0.5, 1.0]     | Controla si se utiliza o no el enfoque de "contraccion" de la amtriz de covarianza|
 | Naive Bayes   | priors            | [0, 0.01, 0.02, ...., 0.99]       | Probabilidades inciales para las clases|
+*Tabla 3.1*
 
-(continuar)
+Para analizar la performance imprimimos los valores que se guardan en ```RandomizedSearchCV.cv_results_```. Los resultados completos están en el código, pero en la *Tabla 3.2* mostramos las mejores (😃) y peores (😥) combinaciones de hiperparámetros para cada modelo:
+
+### Árbol de decisión
+| max_features        | max_depth    | criterion      | score           |
+| -----               | -----        | -----          | -----           |
+| log2                | 1            | gini           | 0.594 😃        |
+| log2                | 10           | log_loss       | 0.579 😃        |
+| log2                | 8            | gini           | 0.526 😥        |
+| log2                | 1            | log_loss       | 0.505 😥        |
+
+Es llamativo que la mejor y peor combinación son iguales, excepto que la mejor usa gini y la peor log_loss, (COMPLETAR: clases imbalanceadas?). Algo parecido pasa con la segunda mejor y peor combinación, que tienen una altura profunda (10 y 8) pero esta vez el gini es el que tiene peor rendimiento!
+Igualmente, el rendimiento del modelo es bastante pobre para todas las configuraciones.
+
+### KNN
+| n_neighbors         | metric       | score           |
+| -----               | -----        | -----           |
+| 14                  | l1           | 0.840 😃        |
+| 17                  | 11           | 0.838 😃        |
+| 19                  | l2           | 0.812 😃        |
+| 6                   | l2           | 0.778 😥        |
+| 1                   | l1           | 0.643 😥        |
+
+Acá es claro que el parámetro n_neghbors (que es el K de KNN) funciona mejor con valores entre 10-20 y funciona mal con valores >10.
+El modelo tiene performance mejor que la del árbol de decisión. Incluso para las peores configuraciones.
+
+(COMPLETAR: LDA y Naive Bayes)
 
