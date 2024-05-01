@@ -143,3 +143,18 @@ El kernel rbf tiene mejor performance. Es decir, los datos se pueden discriminar
 Los parámetros para estos modelos no parecen tener un peso tan fuerte en las predicciones finales. Para LDA quizá no se exploró el espacio lo suficiente como para dar con combinaciones malas, pero en general el modelo tiene buen desempeño.
 
 Con Naive Bayes el modelo converge sin importar el prior por la cantidad de datos y el problema en sí, que es de clasificación binaria.
+
+# Ejercicio 4
+## Diagnóstico Sesgo-Varianza.
+
+(COMPLETAR)
+
+# Ejercicio 5
+## Evaluación de performance
+
+(COMPLETAR)
+
+# Ejercicio 6
+## Conclusiones
+
+(COMPLETAR)
