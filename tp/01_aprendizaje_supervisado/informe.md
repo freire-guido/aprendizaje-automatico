@@ -100,7 +100,7 @@ Para analizar la performance imprimimos los valores que se guardan en ```Randomi
 | log2                | 8            | gini           | 0.526 😥        |
 | log2                | 1            | log_loss       | 0.505 😥        |
 
-Es llamativo que la mejor y peor combinación son iguales, excepto que la mejor usa gini y la peor log_loss, (COMPLETAR: clases imbalanceadas?). Algo parecido pasa con la segunda mejor y peor combinación, que tienen una altura profunda (10 y 8) pero esta vez el gini es el que tiene peor rendimiento!
+Es llamativo que la mejor y peor combinación son iguales, excepto que la mejor usa gini y la peor log_loss. Algo parecido pasa con la segunda mejor y peor combinación, que tienen una altura profunda (10 y 8) pero esta vez el gini es el que tiene peor rendimiento!
 Igualmente, el rendimiento del modelo es bastante pobre para todas las configuraciones.
 
 ### KNN
@@ -115,5 +115,31 @@ Igualmente, el rendimiento del modelo es bastante pobre para todas las configura
 Acá es claro que el parámetro n_neghbors (que es el K de KNN) funciona mejor con valores entre 10-20 y funciona mal con valores >10.
 El modelo tiene performance mejor que la del árbol de decisión. Incluso para las peores configuraciones.
 
-(COMPLETAR: LDA y Naive Bayes)
+### SVM
 
+| param_tol | param_kernel | param_C | mean_test_score |
+| --------- | ------------ | --------| --------------- |
+| 0.1       | rbf          | 9.526   | 0.891 😃        |
+| 0.001     | rbf          | 6.684   | 0.891 😃        |
+| 0.1       | linear       | 8.105   | 0.847 😥        |
+| 0.01      | linear       | 8.105   | 0.847 😥        |
+
+El kernel rbf tiene mejor performance. Es decir, los datos se pueden discriminar usando la distancia entre ellos. Esto tiene sentido si recordamos que KNN también tuvo buenos resultados; otro método que explota la distancia entre instancias para predecir.
+
+### LDA y Naive Bayes
+
+| param_solver | param_shrinkage | mean_test_score |
+| ------------ | --------------- | --------------- |
+| lsqr         | 0.1             | 0.888 😃        |
+| eigen        | 0.1             | 0.888 😃        |
+| eigen        | 1.0             | 0.763 😥        |
+
+| param_priors                           | mean_test_score |
+| -------------------------------------- | --------------- |
+| [0.979, 0.020]                         | 0.822 😃        |
+| [0.151, 0.848]                         | 0.822 😃        |
+| [0.0, 1.0]                             | 0.500 😥        |
+
+Los parámetros para estos modelos no parecen tener un peso tan fuerte en las predicciones finales. Para LDA quizá no se exploró el espacio lo suficiente como para dar con combinaciones malas, pero en general el modelo tiene buen desempeño.
+
+Con Naive Bayes el modelo converge sin importar el prior por la cantidad de datos y el problema en sí, que es de clasificación binaria.
