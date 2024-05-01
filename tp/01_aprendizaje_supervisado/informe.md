@@ -147,6 +147,10 @@ Con Naive Bayes el modelo converge sin importar el prior por la cantidad de dato
 # Ejercicio 4
 ## Diagnóstico Sesgo-Varianza.
 
+![curvas de complejidad](/tp/01_aprendizaje_supervisado/curvas_complejidad.png)
+
+![curvas de aprendizaje](/tp/01_aprendizaje_supervisado/curvas_aprendizaje.png)
+
 (COMPLETAR)
 
 # Ejercicio 5
