@@ -112,7 +112,7 @@ Igualmente, el rendimiento del modelo es bastante pobre para todas las configura
 | 6                   | l2           | 0.778 😥        |
 | 1                   | l1           | 0.643 😥        |
 
-Acá es claro que el parámetro n_neghbors (que es el K de KNN) funciona mejor con valores entre 10-20 y funciona mal con valores >10.
+Acá es claro que el parámetro n_neghbors (que es el K de KNN) funciona mejor con valores entre 10-20 y funciona mal con valores <10.
 El modelo tiene performance mejor que la del árbol de decisión. Incluso para las peores configuraciones.
 
 ### SVM
