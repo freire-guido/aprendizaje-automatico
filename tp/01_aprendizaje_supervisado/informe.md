@@ -88,6 +88,7 @@ Comenzaremos delimitando cuales hiperparametros utilizar para cada modelo y sus 
 | LDA           | solver            | ['lsqr', 'eigen']                 | Metodo utilizado para resolver el problema|
 | LDA           | shrinkage         | [None, 'auto', 0.1, 0.5, 1.0]     | Controla si se utiliza o no el enfoque de "contraccion" de la amtriz de covarianza|
 | Naive Bayes   | priors            | [0, 0.01, 0.02, ...., 0.99]       | Probabilidades inciales para las clases|
+
 *Tabla 3.1*
 
 Para analizar la performance imprimimos los valores que se guardan en ```RandomizedSearchCV.cv_results_```. Los resultados completos están en el código, pero en la *Tabla 3.2* mostramos las mejores (😃) y peores (😥) combinaciones de hiperparámetros para cada modelo:
@@ -147,12 +148,64 @@ Con Naive Bayes el modelo converge sin importar el prior por la cantidad de dato
 # Ejercicio 4
 ## Diagnóstico Sesgo-Varianza.
 
+Con el objetivo de analizar el sesgo y la varianza de los mejores modelos obtenidos (mayor AUCROC) de los distintos algoritmos, utilizaremos derivadas técnicas de _bagging_ y _boosting_. Estas técnicas nos permitirán analizar y comprender cuando un modelo tiene o podría tener alta/bajo sesgo y/o varianza. En este sentido, comenzaremos variando los hiperparámetros ```max_depth``` y ```C``` de los modelos árbol de decisión y SVM respectivamente, los AUCROC obtenidos se observan en el _Gráfico 4.1_ a los que llamamos curvas de complejidad. 
+
+El modelo de árbol de decisión parece tener un sesgo alto cuando el valor del ```max_depth``` es bajo. A medida que este aumenta, se observa que la métrica mejora significativamente en el caso del conjunto de entrenamiento, no así en el conjunto de evaluación/test. Esto podría deberse a varias razones, por ejemplo, nuestro árbol podría estar overfitteando, si esto ocurriera nuestro árbol no encontrará patrones significativamente generalizables dando así una baja métrica en el conjunto de test. Sin embargo, esta idea quedaría fácilmente descartada al observar que el conjunto de evaluación, sin importar el valor de ```max_depth```, siempre es bajo y en ningún momento logra un pico claro o la convergencia hacia algún valor. Entonces, el bajo valor de nuestra métrica debería estar causado por otro inconveniente, aunque también podría estar ocurriendo que nuestro conjunto de test fuera "malo", hipótesis que también se podría descartar desde el momento en que se trabaja con k-fold cross validation. 
+
+Podríamos concluir entonces, que el causante de que nuestra métrica sea baja y por ende un modelo malo, es la alta varianza del mismo. El árbol de decisión no es un modelo lo suficientemente robusto para los datos con los que estamos trabajando. Veamos que sin importar el valor de la altura máxima del árbol, el AUCROC del conjunto de test no logra superar en ningún momento un valor considerable como para tener en cuenta al modelo como "bueno". 
+
+En el caso del SVM, ocurre exactamente lo opuesto. Se puede observar que cuando movemos el hiperparámetro ```C```, no varía mucho el valor de la métrica tanto en el conjunto de entrenamiento como en el de test. Por ende, parecería que el modelo es lo suficientemente robusto como para captar valores o condiciones más generales de los datos. La amplitud entre la curva de entrenamiento y la de test, se mantiene casi constante por lo que existiría un sesgo, sin embargo, este es incomparable al del modelo comentado previamente. Como último, podríamos decir que la cuasi nula variación (convergencia) en la métrica del conjunto de test indicaría una baja varianza del modelo, ya que para casi cualquier valor de ```C``` el modelo esta underfitteando (captando generalidades que logran una buena métrica, infiriendo así una baja varianza de los datos, pero manteniendo una amplitud entre curvas, infiriendo así la existencia de un sesgo no captado por el modelo). 
+
 ![curvas de complejidad](/tp/01_aprendizaje_supervisado/curvas_complejidad.png)
+<p align="center"><em> Grafico 4.1</em> </p>
+
+En la siguiente parte para continuar con el análisis Sesgo-Varianza veremos qué ocurre con los modelos cuando variamos la cantidad de datos con las que entrenan, es decir, variamos la cantidad de instancias del conjunto de entrenamiento. No entraremos muy en detalle para cada modelo en particular, pero compararemos que diferencias o similitudes hay entre estos al momento de aplicar lo dicho previamente. En este sentido, se hace el gráfico de las curvas de aprendizaje de los modelos (_Grafico 4.2_). 
+
+Veamos entonces que en el caso del primer modelo (AAD) a medida que se aumenta el conjunto de entrenamiento, no se observa una mejora en la métrica del conjunto de test a diferencia de lo que pasa con el resto de modelos en donde, a medida que aumenta la cantidad de datos de entrenamiento este métrica si mejora, deduciendo así que el ADD tiene un sesgo y varianza altos, esto significa que el modelo se ajusta demasiado a los datos de entrenamiento y no puede generalizar bien a nuevos datos. 
+
+Al observar ahora los gráficos de los distintos modelos que no son el ADD, sugerirían que el rendimiento puede mejorar con el incremento de datos en el conjunto de entrenamiento dejando en claro así, el bajo sesgo de los mismos en comparación con el modelo de ADD. Además, el valor de AUCROC para el cual estarían convergiendo pareciera lo suficientemente alto deduciendo de esta otra manera poca varianza en los mismos. 
+
+Finalmente podemos observar el modelo GaussianNB en particular comparado con modelos como el SVM o el LDA. La convergencia del GaussianNB parecería converger en un valor cercano al 0.7 a diferencia del SVM o LDA que ronda el 0.9. Esta diferencia podría deducirse de un sobreajuste del modelo y por ende una varianza mayor del mismo. Decimos que este modelo overfittea (sobreajuste) ya que el modelo GaussianNB en el conjunto de entrenamiento obtiene una métrica cercana a 1, la cual casi ni varia a medida que aumentan los datos, sin embargo, la convergencia del AUCROC en el conjunto de test es más modesta que en otros casos ya nombrados. 
 
 ![curvas de aprendizaje](/tp/01_aprendizaje_supervisado/curvas_aprendizaje.png)
+<p align="center"><em> Grafico 4.2</em> </p>
+
+Para finalizar con este análisis haremos un modelo de Random Forest, con 200 árboles que luego mediante una votación "democrática" definirán la clase correspondiente. Analizaremos la variable ```max_features``` que define el número máximo de variables aleatorias que se consideran al dividir un nodo durante la construcción de cada árbol. 
+
+En el _Grafico 4.3_ podemos ver que al variar el valor de ```max_features``` no se logra un mejor rendimiento del random forest. Nosotros entendemos que esto se debe a un balance entre el sesgo y la varianza del modelo, ya que un valor de ```max_features``` alto podría sobre ajustar los árboles provocando así una alta varianza, mientras que un valor bajo de ```max_features``` puede aumentar el sesgo al limitar la capacidad del modelo para capturar generalidades en los datos. 
+
+!!ACA VA EL GRAFICO DE LA CURVA DE COMPLEJIDAD DEL RANDOM FOREST!!!
+<p align="center"><em> Grafico 4.3</em> </p>
+
+Continuando con el análisis del RF (Random Forest), veamos que ocurre con este modelo cuando variamos la cantidad de datos con la que entrena, observemos entonces la curva de aprendizaje del modelo _Grafico 4.4_. Se logra observar una mejora en el rendimiento (incremento de la métrica AUCROC), sin embargo, se observa una convergencia de este modelo cercana al 0.8, menor que la de algunos modelos analizados previamente como el SVM o el LDA. 
+
+De cualquier manera, este incremento en la métrica era predecible, ya que, generalmente, al acceder a más datos, el modelo puede encontrar generalidades que le servirán para predecir y/o obtener una mejor métrica en un conjunto no visto hasta entonces, ya que se le amplía el universo de datos vistos permitiendo observar datos que en iteraciones anteriores (las que tenían menos datos) no existían. Podemos decir entonces, que es menos probable que el modelo sufra de un sesgo alto mientras más datos se le provean. 
+
+
+![curvas de aprendizaje](/tp/01_aprendizaje_supervisado/RandomForest.png)
+<p align="center"><em> Grafico 4.4</em> </p>
+
+# Ejercicio 5
+## Evaluación de performance
+A partir del punto 3, observamos que el SVM tiene mejor rendimiento por lo que lo seleccionamos para estimar las probabilidades. Realizamos un Random Search para un SVM con kernel 'rbf' y tuneamos los hiperparámetros tol y C. Los valores obtenidos son (C=208602408924850.5, tol=0.08316104153230962).
+Con este modelo estimamos las probabilidades para X_test y X_held_out y calculamos el AUCROC para el conjunto de test. Suponemos que este valor de AUCROC será similar al del 'held out' pues estos conjuntos serían muestras de la misma distribución.
 
 (COMPLETAR)
-(Ideas para desarrollar)
+
+# Ejercicio 6
+## Conclusiones
+
+(COMPLETAR)
+
+(COMENTARIO FACU)
+les dejo esto por si les sirve para la conclusion, esta claramente sacado de chat gpt (MODIFIQUENLO o ni lo usen, lo q quieran), estaba buscando una conclusion general par ael punto 4, pero decidi dejarlo asi, asi todas la conlcusiones van aca al final
+
+""""
+Al comparar el sesgo y la varianza entre diferentes modelos, es crucial encontrar un equilibrio que permita desarrollar modelos con capacidad de generalización óptima. Un alto sesgo puede indicar una simplificación excesiva de los datos, mientras que una alta varianza sugiere sensibilidad excesiva a variaciones en los datos de entrenamiento. Encontrar el punto medio adecuado es esencial para asegurar un rendimiento estable y preciso en la predicción de nuevos datos.
+""""
+
+(IDEAS NACHO PUNTO 4) (hay q chequear algunas cosas xd)
+
 Decision tree tiene mucho sesgo con profundidad baja (No encuentra el patrón de los datos de train).
 Decision tree, podemos hablar de overfitting si hay un máximo en el test, no hay uno claro. Pero si lo comparamos con el gráfico del SVM se ve que hay una función con error en training similar pero mejor en test. Según la definición de las diapos clase 1 podría sobreajustar y subajustar pero ni idea. 
 
@@ -166,14 +219,5 @@ Los gráficos que no son del Decision Tree sugieren que el rendimiento pueda mej
 
 GaussianNB si lo comparamos con otros sobreajusta
 
-# Ejercicio 5
-## Evaluación de performance
-A partir del punto 3, observamos que el SVM tiene mejor rendimiento por lo que lo seleccionamos para estimar las probabilidades. Realizamos un Random Search para un SVM con kernel 'rbf' y tuneamos los hiperparámetros tol y C. Los valores obtenidos son (C=208602408924850.5, tol=0.08316104153230962).
-Con este modelo estimamos las probabilidades para X_test y X_held_out y calculamos el AUCROC para el conjunto de test. Suponemos que este valor de AUCROC será similar al del 'held out' pues estos conjuntos serían muestras de la misma distribución.
 
-(COMPLETAR)
 
-# Ejercicio 6
-## Conclusiones
-
-(COMPLETAR)
