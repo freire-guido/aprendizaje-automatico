@@ -174,7 +174,7 @@ Para finalizar con este análisis haremos un modelo de Random Forest, con 200 á
 
 En el _Grafico 4.3_ podemos ver que al variar el valor de ```max_features``` no se logra un mejor rendimiento del random forest. Nosotros entendemos que esto se debe a un balance entre el sesgo y la varianza del modelo, ya que un valor de ```max_features``` alto podría sobre ajustar los árboles provocando así una alta varianza, mientras que un valor bajo de ```max_features``` puede aumentar el sesgo al limitar la capacidad del modelo para capturar generalidades en los datos. 
 
-!!ACA VA EL GRAFICO DE LA CURVA DE COMPLEJIDAD DEL RANDOM FOREST!!!
+![curvas de complejidad random forest](/tp/01_aprendizaje_supervisado/random_forest_complejidad.png)
 <p align="center"><em> Grafico 4.3</em> </p>
 
 Continuando con el análisis del RF (Random Forest), veamos que ocurre con este modelo cuando variamos la cantidad de datos con la que entrena, observemos entonces la curva de aprendizaje del modelo _Grafico 4.4_. Se logra observar una mejora en el rendimiento (incremento de la métrica AUCROC), sin embargo, se observa una convergencia de este modelo cercana al 0.8, menor que la de algunos modelos analizados previamente como el SVM o el LDA. 
@@ -182,7 +182,7 @@ Continuando con el análisis del RF (Random Forest), veamos que ocurre con este 
 De cualquier manera, este incremento en la métrica era predecible, ya que, generalmente, al acceder a más datos, el modelo puede encontrar generalidades que le servirán para predecir y/o obtener una mejor métrica en un conjunto no visto hasta entonces, ya que se le amplía el universo de datos vistos permitiendo observar datos que en iteraciones anteriores (las que tenían menos datos) no existían. Podemos decir entonces, que es menos probable que el modelo sufra de un sesgo alto mientras más datos se le provean. 
 
 
-![curvas de aprendizaje](/tp/01_aprendizaje_supervisado/RandomForest.png)
+![curvas de aprendizaje random forest](/tp/01_aprendizaje_supervisado/random_forest_aprendizaje.png)
 <p align="center"><em> Grafico 4.4</em> </p>
 
 # Ejercicio 5
