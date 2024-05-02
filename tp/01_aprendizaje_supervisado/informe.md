@@ -152,9 +152,24 @@ Con Naive Bayes el modelo converge sin importar el prior por la cantidad de dato
 ![curvas de aprendizaje](/tp/01_aprendizaje_supervisado/curvas_aprendizaje.png)
 
 (COMPLETAR)
+(Ideas para desarrollar)
+Decision tree tiene mucho sesgo con profundidad baja (No encuentra el patrón de los datos de train).
+Decision tree, podemos hablar de overfitting si hay un máximo en el test, no hay uno claro. Pero si lo comparamos con el gráfico del SVM se ve que hay una función con error en training similar pero mejor en test. Según la definición de las diapos clase 1 podría sobreajustar y subajustar pero ni idea. 
+
+Para el gráfico del SVM para un C más bajo el modelo subajusta (lo comparamos con un C más alto y se ve). Lo mismo para el Decision tree con poca profundidad vs cualquier C en el SVM.
+
+En los gráficos de abajo:
+Los primeros dos tienen mucha varianza, le agregamos datos y cambia mucho el rendimiento en train.
+En decision tree no se ve que el rendimiento pueda mejorar con más datos (sesgo).
+
+Los gráficos que no son del Decision Tree sugieren que el rendimiento pueda mejorar con más datos (poco sesgo) y parecen tener poca varianza al agregar datos.
+
+GaussianNB si lo comparamos con otros sobreajusta
 
 # Ejercicio 5
 ## Evaluación de performance
+A partir del punto 3, observamos que el SVM tiene mejor rendimiento por lo que lo seleccionamos para estimar las probabilidades. Realizamos un Random Search para un SVM con kernel 'rbf' y tuneamos los hiperparámetros tol y C. Los valores obtenidos son (C=208602408924850.5, tol=0.08316104153230962).
+Con este modelo estimamos las probabilidades para X_test y X_held_out y calculamos el AUCROC para el conjunto de test. Suponemos que este valor de AUCROC será similar al del 'held out' pues estos conjuntos serían muestras de la misma distribución.
 
 (COMPLETAR)
 
