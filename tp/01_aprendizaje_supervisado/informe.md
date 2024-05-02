@@ -156,8 +156,10 @@ Podríamos concluir entonces, que el causante de que nuestra métrica sea baja y
 
 En el caso del SVM, ocurre exactamente lo opuesto. Se puede observar que cuando movemos el hiperparámetro ```C```, no varía mucho el valor de la métrica tanto en el conjunto de entrenamiento como en el de test. Por ende, parecería que el modelo es lo suficientemente robusto como para captar valores o condiciones más generales de los datos. La amplitud entre la curva de entrenamiento y la de test, se mantiene casi constante, el modelo se adapta muy bien a los patrones del conjunto de entrenamiento pero sigue aumentando su rendimiento en el conjunto de evaluación. Por último, podríamos decir que la casi nula variación (convergencia) en la métrica del conjunto de test indicaría una baja varianza del algoritmo, ya que para cualquier valor de ```C``` capta generalidades que logran una buena métrica. 
 
-![curvas de complejidad](/tp/01_aprendizaje_supervisado/curvas_complejidad.png)
-<p align="center"><em> Grafico 4.1</em> </p>
+<p align="center">
+  <img src="curvas_complejidad.png" alt="Curvas de complejidad" title="Gráfico 4.1"/>
+</p>
+<p align="center"><em>Gráfico 4.1</em></p>
 
 En la siguiente parte para continuar con el análisis Sesgo-Varianza veremos qué ocurre con los modelos cuando variamos la cantidad de datos con las que entrenan, es decir, variamos la cantidad de instancias del conjunto de entrenamiento. No entraremos muy en detalle para cada modelo en particular, pero compararemos que diferencias o similitudes hay entre estos al momento de aplicar lo dicho previamente. En este sentido, se hace el gráfico de las curvas de aprendizaje de los modelos (_Grafico 4.2_). 
 
@@ -167,23 +169,29 @@ Al observar ahora los gráficos de los distintos modelos que no son el ADD, suge
 
 Finalmente podemos observar el modelo GaussianNB en particular comparado con modelos como el SVM o el LDA. La convergencia del GaussianNB parecería converger en un valor cercano al 0.7 a diferencia del SVM o LDA que ronda el 0.9. Esta diferencia podría deducirse de un sobreajuste del modelo y por ende una varianza mayor del mismo. Decimos que este modelo sobreajusta ya que el modelo GaussianNB en el conjunto de entrenamiento obtiene una métrica cercana a 1, la cual casi no varia a medida que aumentan los datos, sin embargo, la convergencia del AUCROC en el conjunto de test es más modesta que en otros casos ya nombrados. 
 
-![curvas de aprendizaje](/tp/01_aprendizaje_supervisado/curvas_aprendizaje.png)
-<p align="center"><em> Grafico 4.2</em> </p>
+<p align="center">
+  <img src="curvas_aprendizaje.png" alt="Curvas de aprendizaje" title="Gráfico 4.2"/>
+</p>
+<p align="center"><em>Gráfico 4.2</em></p>
 
 Para finalizar con este análisis haremos un modelo de Random Forest, con 200 árboles que luego mediante una votación "democrática" definirán la clase correspondiente. Analizaremos la variable ```max_features``` que define el número máximo de variables aleatorias que se consideran al dividir un nodo durante la construcción de cada árbol. 
 
 En el _Grafico 4.3_ podemos ver que al variar el valor de ```max_features``` no se logra un mejor rendimiento del random forest. Nosotros entendemos que esto se debe a un balance entre el sesgo y la varianza del modelo, ya que un valor de ```max_features``` alto podría sobre ajustar los árboles provocando así una alta varianza, mientras que un valor bajo de ```max_features``` puede aumentar el sesgo al limitar la capacidad del modelo para capturar generalidades en los datos. 
 
-![curvas de complejidad random forest](/tp/01_aprendizaje_supervisado/random_forest_complejidad.png)
-<p align="center"><em> Grafico 4.3</em> </p>
+<p align="center">
+  <img src="random_forest_complejidad.png" alt="Curvas de complejidad random forest" title="Gráfico 4.3"/>
+</p>
+<p align="center"><em>Gráfico 4.3</em></p>
 
 Continuando con el análisis del RF (Random Forest), veamos que ocurre con este modelo cuando variamos la cantidad de datos con la que entrena, observemos entonces la curva de aprendizaje del modelo _Grafico 4.4_. Se logra observar una mejora en el rendimiento (incremento de la métrica AUCROC), sin embargo, se observa una convergencia de este modelo cercana al 0.8, menor que la de algunos modelos analizados previamente como el SVM o el LDA. 
 
 De cualquier manera, este incremento en la métrica era predecible, ya que, generalmente, al acceder a más datos, el modelo puede encontrar generalidades que le servirán para predecir y/o obtener una mejor métrica en un conjunto no visto hasta entonces, ya que se le amplía el universo de datos vistos permitiendo observar datos que en iteraciones anteriores (las que tenían menos datos) no existían. Podemos decir entonces, que es menos probable que el modelo sufra de un sesgo alto mientras más datos se le provean. 
 
+<p align="center">
+  <img src="random_forest_aprendizaje.png" alt="Curvas de aprendizaje random forest" title="Gráfico 4.4"/>
+</p>
+<p align="center"><em>Gráfico 4.4</em></p>
 
-![curvas de aprendizaje random forest](/tp/01_aprendizaje_supervisado/random_forest_aprendizaje.png)
-<p align="center"><em> Grafico 4.4</em> </p>
 
 # Ejercicio 5
 ## Evaluación de performance
@@ -192,8 +200,10 @@ Para cerrar el trabajo, lo que haremos será predecir y ver que resultados no ar
 
 En este sentido es entonces que a partir del punto 3, observamos que el SVM tiene un mejor rendimiento que el resto de los modelos, por lo que lo seleccionamos para estimar las probabilidades. Para ver cuales son los mejores hiperparámetros para este mismo, realizamos un Random Search de los hiperparámetros ```tol``` y ```C```, mientras dejamos fijo el hiperparámetro kernel como ```rbf```, esto es porque vimos que ```rbf``` lograba una mejor métrica en comparación a ```linear``` (la otra opción que habíamos tenido en cuenta).  
 
-![curvas de aprendizaje](/tp/01_aprendizaje_supervisado/AUCROC_SVM.png) 
-<p align="center"><em> Grafico 5.1</em> </p> 
+<p align="center">
+  <img src="AUCROC_SVM.png" alt="Comparativa entre modelos SVM" title="Gráfico 5.1"/>
+</p>
+<p align="center"><em>Gráfico 5.1</em></p>
 
 En el _Grafico 5.1_ se muestra una comparativa de los distintos valores de ```tol``` y ```C```, para los cuales se ejecutó un modelo en la función del Random Search. Podemos ver que el hiperparámetro ```C``` no afecta tanto al rendimiento, es decir, si "clavamos" el valor de ```tol``` en algún valor determinado, variar el ```C``` no produce mucha variación en el valor del AUCROC obtenido por el modelo. Diferente es con el hiperparámetro ```tol```, para el cual si pareciera haber mejores valores que otros. Nos quedaremos entonces con los mejores valores de ```tol``` y ```C``` que generan el mayor valor de AUCROC entre todos los modelos. Estos valores son ($C=208602408924850.5$, $tol=0.08316104153230962$). 
 
