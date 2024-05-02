@@ -212,29 +212,23 @@ Con este modelo entonces calcularemos la probabilidad de cada instancia del conj
 # Ejercicio 6
 ## Conclusiones
 
-(COMPLETAR)
+En este trabajo, exploramos y comparamos algoritmos de aprendizaje supervisado para clasificar expresiones genómicas. Realizamos experimentos y análisis para sacar conclusiones sobre el rendimiento de cada enfoque.
 
-(COMENTARIO FACU)
-les dejo esto por si les sirve para la conclusion, esta claramente sacado de chat gpt (MODIFIQUENLO o ni lo usen, lo q quieran), estaba buscando una conclusion general par ael punto 4, pero decidi dejarlo asi, asi todas la conlcusiones van aca al final
+Notamos que separar los datos en conjuntos de entrenamiento y evaluación es clave para estimar de manera confiable el rendimiento de los modelos, con un 80% para entrenamiento y el 20% restante para evaluación, usando una permutación aleatoria.
 
-""""
-Al comparar el sesgo y la varianza entre diferentes modelos, es crucial encontrar un equilibrio que permita desarrollar modelos con capacidad de generalización óptima. Un alto sesgo puede indicar una simplificación excesiva de los datos, mientras que una alta varianza sugiere sensibilidad excesiva a variaciones en los datos de entrenamiento. Encontrar el punto medio adecuado es esencial para asegurar un rendimiento estable y preciso en la predicción de nuevos datos.
-""""
+En los modelos de árbol de decisión, aumentar la altura del árbol mejoró la precisión en entrenamiento pero no en validación, lo que indica posible sobreajuste. El criterio entropía fue superior al Gini.
 
-(IDEAS NACHO PUNTO 4) (hay q chequear algunas cosas xd)
+RandomizedSearchCV mostró que el modelo SVM con kernel RBF fue superior en AUCROC. KNN también fue efectivo, mientras que los árboles de decisión y Naive Bayes fueron menos sensibles a los ajustes de hiperparámetros.
 
-Decision tree tiene mucho sesgo con profundidad baja (No encuentra el patrón de los datos de train).
-Decision tree, podemos hablar de overfitting si hay un máximo en el test, no hay uno claro. Pero si lo comparamos con el gráfico del SVM se ve que hay una función con error en training similar pero mejor en test. Según la definición de las diapos clase 1 podría sobreajustar y subajustar pero ni idea. 
+El análisis de sesgo-varianza con curvas de complejidad y aprendizaje reveló que los árboles de decisión tienen alto sesgo con profundidades bajas y alta varianza con profundidades mayores. En cambio, SVM fue más robusto y mostró menor varianza. Las curvas de aprendizaje indicaron que SVM y LDA podrían mejorar con más datos, mientras que los árboles de decisión y GaussianNB tendieron al sobreajuste.
 
-Para el gráfico del SVM para un C más bajo el modelo subajusta (lo comparamos con un C más alto y se ve). Lo mismo para el Decision tree con poca profundidad vs cualquier C en el SVM.
+Random Forest mejoró con más datos de entrenamiento, pero no superó a SVM y LDA. Esto subraya la importancia de balancear sesgo y varianza.
 
-En los gráficos de abajo:
-Los primeros dos tienen mucha varianza, le agregamos datos y cambia mucho el rendimiento en train.
-En decision tree no se ve que el rendimiento pueda mejorar con más datos (sesgo).
+Un aspecto que no abordamos en profundidad es la estratificación durante la separación de los datos. Asumimos que la distribución de las clases es homogénea en nuestra muestra aleatoria, lo cual puede no ser el caso en práctica.  Omitir este paso podría llevar a conclusiones erróneas sobre el rendimiento del modelo, especialmente en datos con distribuciones de clases desiguales. Pero, quisimos hacerlo de esta manera para igualar el proceso de separacion de los datos hechos por los docentes y que nuestra estimacion del AUCROC sea acorde.
 
-Los gráficos que no son del Decision Tree sugieren que el rendimiento pueda mejorar con más datos (poco sesgo) y parecen tener poca varianza al agregar datos.
+Seleccionamos SVM con los mejores hiperparámetros para predecir probabilidades en el conjunto de datos sin etiquetas (X_held_out), estimando un AUCROC de 0.9142 en el conjunto de evaluación.
 
-GaussianNB si lo comparamos con otros sobreajusta
+Concluimos que es crucial seleccionar y evaluar modelos cuidadosamente y analizar el sesgo-varianza para desarrollar modelos con buena generalización. SVM con kernel RBF fue el más efectivo para este problema. Sin embargo, el rendimiento óptimo depende del balance adecuado entre sesgo y varianza, y más datos podrían mejorar los resultados.
 
 
 
