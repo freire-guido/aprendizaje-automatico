@@ -216,19 +216,19 @@ En este trabajo, exploramos y comparamos algoritmos de aprendizaje supervisado p
 
 Notamos que separar los datos en conjuntos de entrenamiento y evaluación es clave para estimar de manera confiable el rendimiento de los modelos, con un 80% para entrenamiento y el 20% restante para evaluación, usando una permutación aleatoria.
 
-En los modelos de árbol de decisión, aumentar la altura del árbol mejoró la precisión en entrenamiento pero no en validación, lo que indica posible sobreajuste. El criterio entropía fue superior al Gini.
+En los modelos de árbol de decisión, aumentar la altura del árbol mejoró la precisión en entrenamiento pero no en validación, lo que indica posible sobreajuste. El criterio `entropía` fue superior al `gini`.
 
-RandomizedSearchCV mostró que el modelo SVM con kernel RBF fue superior en AUCROC. KNN también fue efectivo, mientras que los árboles de decisión y Naive Bayes fueron menos sensibles a los ajustes de hiperparámetros.
+`RandomizedSearchCV` mostró que el modelo `SVM` con kernel `RBF` fue superior en `AUCROC`. `KNN` también fue efectivo, mientras que los árboles de decisión y `Naive Bayes` fueron menos sensibles a los ajustes de hiperparámetros.
 
-El análisis de sesgo-varianza con curvas de complejidad y aprendizaje reveló que los árboles de decisión tienen alto sesgo con profundidades bajas y alta varianza con profundidades mayores. En cambio, SVM fue más robusto y mostró menor varianza. Las curvas de aprendizaje indicaron que SVM y LDA podrían mejorar con más datos, mientras que los árboles de decisión y GaussianNB tendieron al sobreajuste.
+El análisis de sesgo-varianza con curvas de complejidad y aprendizaje reveló que los árboles de decisión tienen alto sesgo con profundidades bajas y alta varianza con profundidades mayores. En cambio, `SVM` fue más robusto y mostró menor varianza. Las curvas de aprendizaje indicaron que `SVM` y `LDA` podrían mejorar con más datos, mientras que los árboles de decisión y `GaussianNB` tendieron al sobreajuste.
 
-Random Forest mejoró con más datos de entrenamiento, pero no superó a SVM y LDA. Esto subraya la importancia de balancear sesgo y varianza.
+`Random Forest` mejoró con más datos de entrenamiento, pero no superó a `SVM` y `LDA`. Esto subraya la importancia de balancear sesgo y varianza.
 
-Un aspecto que no abordamos en profundidad es la estratificación durante la separación de los datos. Asumimos que la distribución de las clases es homogénea en nuestra muestra aleatoria, lo cual puede no ser el caso en práctica.  Omitir este paso podría llevar a conclusiones erróneas sobre el rendimiento del modelo, especialmente en datos con distribuciones de clases desiguales. Pero, quisimos hacerlo de esta manera para igualar el proceso de separacion de los datos hechos por los docentes y que nuestra estimacion del AUCROC sea acorde.
+Un aspecto que no abordamos en profundidad es la estratificación durante la separación de los datos. Asumimos que la distribución de las clases es homogénea en nuestra muestra aleatoria, lo cual puede no ser el caso en práctica. Omitir este paso podría llevar a conclusiones erróneas sobre el rendimiento del modelo, especialmente en datos con distribuciones de clases desiguales. Pero, quisimos hacerlo de esta manera para igualar el proceso de separación de los datos hechos por los docentes y que nuestra estimación del `AUCROC` sea acorde.
 
-Seleccionamos SVM con los mejores hiperparámetros para predecir probabilidades en el conjunto de datos sin etiquetas (X_held_out), estimando un AUCROC de 0.9142 en el conjunto de evaluación.
+Seleccionamos `SVM` con los mejores hiperparámetros para predecir probabilidades en el conjunto de datos sin etiquetas (`X_held_out`), estimando un `AUCROC` de 0.9142 en el conjunto de evaluación.
 
-Concluimos que es crucial seleccionar y evaluar modelos cuidadosamente y analizar el sesgo-varianza para desarrollar modelos con buena generalización. SVM con kernel RBF fue el más efectivo para este problema. Sin embargo, el rendimiento óptimo depende del balance adecuado entre sesgo y varianza, y más datos podrían mejorar los resultados.
+Concluimos que es crucial seleccionar y evaluar modelos cuidadosamente y analizar el sesgo-varianza para desarrollar modelos con buena generalización. `SVM` con kernel `RBF` fue el más efectivo para este problema. Sin embargo, el rendimiento óptimo depende del balance adecuado entre sesgo y varianza, y más datos podrían mejorar los resultados.
 
 
 
