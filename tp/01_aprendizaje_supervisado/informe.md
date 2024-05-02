@@ -188,7 +188,7 @@ De cualquier manera, este incremento en la métrica era predecible, ya que, gene
 # Ejercicio 5
 ## Evaluación de performance
 A partir del punto 3, observamos que el SVM tiene mejor rendimiento por lo que lo seleccionamos para estimar las probabilidades. Realizamos un Random Search para un SVM con kernel 'rbf' y tuneamos los hiperparámetros tol y C. Los valores obtenidos son (C=208602408924850.5, tol=0.08316104153230962).
-Con este modelo estimamos las probabilidades para X_test y X_held_out y calculamos el AUCROC para el conjunto de test. Suponemos que este valor de AUCROC será similar al del 'held out' pues estos conjuntos serían muestras de la misma distribución.
+Con este modelo estimamos las probabilidades para X_test y X_held_out y calculamos el AUCROC para el conjunto de test, obteniendo 0.9142. Suponemos que este valor de AUCROC será similar al del 'held out' pues estos conjuntos serían muestras de la misma distribución.
 
 (COMPLETAR)
 
