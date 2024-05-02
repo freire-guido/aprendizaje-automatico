@@ -187,10 +187,17 @@ De cualquier manera, este incremento en la métrica era predecible, ya que, gene
 
 # Ejercicio 5
 ## Evaluación de performance
-A partir del punto 3, observamos que el SVM tiene mejor rendimiento por lo que lo seleccionamos para estimar las probabilidades. Realizamos un Random Search para un SVM con kernel 'rbf' y tuneamos los hiperparámetros tol y C. Los valores obtenidos son (C=208602408924850.5, tol=0.08316104153230962).
-Con este modelo estimamos las probabilidades para X_test y X_held_out y calculamos el AUCROC para el conjunto de test, obteniendo 0.9142. Suponemos que este valor de AUCROC será similar al del 'held out' pues estos conjuntos serían muestras de la misma distribución.
 
-(COMPLETAR)
+Para cerrar el trabajo, lo que haremos será predecir y ver que resultados no arrojan los datos separados en el conjunto de test. Además también trabajaremos con un conjunto de datos para los cuales no tenemos la etiqueta verdadera los mismos (```X_held_out```), nuestro objetivo será ver que probabilidades nos asigna para cada instancia nuestro modelo de pertenecer a la clase 1, recordemos que estábamos hablando de un problema binario, y intentar a su vez predecir el valor que el AUCROC tendrá en ese mismo conjunto de datos.  
+
+En este sentido es entonces que a partir del punto 3, observamos que el SVM tiene un mejor rendimiento que el resto de los modelos, por lo que lo seleccionamos para estimar las probabilidades. Para ver cuales son los mejores hiperparámetros para este mismo, realizamos un Random Search de los hiperparámetros ```tol``` y ```C```, mientras dejamos fijo el hiperparámetro kernel como ```rbf```, esto es porque vimos que ```rbf``` lograba una mejor métrica en comparación a ```linear``` (la otra opción que habíamos tenido en cuenta).  
+
+![curvas de aprendizaje](/tp/01_aprendizaje_supervisado/AUCROC_SVM.png) 
+<p align="center"><em> Grafico 5.1</em> </p> 
+
+En el _Grafico 5.1_ se muestra una comparativa de los distintos valores de ```tol``` y ```C```, para los cuales se ejecutó un modelo en la función del Random Search. Podemos ver que el hiperparámetro ```C``` no afecta tanto al rendimiento, es decir, si "clavamos" el valor de ```tol``` en algún valor determinado, variar el ```C``` no produce mucha variación en el valor del AUCROC obtenido por el modelo. Diferente es con el hiperparámetro ```tol```, para el cual si pareciera haber mejores valores que otros. Nos quedaremos entonces con los mejores valores de ```tol``` y ```C``` que generan el mayor valor de AUCROC entre todos los modelos. Estos valores son ($C=208602408924850.5$, $tol=0.08316104153230962$). 
+
+Con este modelo entonces calcularemos la probabilidad de cada instancia del conjunto ```X_held_out``` de pertenecer a la clase 1. Pero además intentaremos predecir al valor que la métrica AUCROC arrojaría sobre estos datos si efectivamente tuviéramos las etiquetas reales de los mismos. Para esto lo que haremos será utilizar el conjunto de test, veremos que etiqueta le asigna a cada instancia de estos datos y lo compararemos con la etiqueta real, que en este caso si tenemos. El AUCROC del conjunto de test nos arroja un valor del 0.9142, podríamos decir que este valor será similar al del ```X_held_out``` predicho pues estos conjuntos serían muestras de la misma distribución que los que tenemos para los conjuntos de entrenamiento y test. 
 
 # Ejercicio 6
 ## Conclusiones
